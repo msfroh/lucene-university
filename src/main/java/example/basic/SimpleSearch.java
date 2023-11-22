@@ -1,6 +1,6 @@
 // # Simple search example
 //
-// This example will walk through a very simple search example with Lucene.
+// This will walk through a very simple search example with Lucene.
 //
 // The example has the following steps:
 // 1. Create documents. Documents are iterable collections of `IndexableField`.
