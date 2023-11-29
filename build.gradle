@@ -8,5 +8,9 @@ repositories {
 }
 
 dependencies {
-  implementation 'org.apache.lucene:lucene-core:9.8.0'
+  /* If you want to use the latest snapshot version you can generate it by using cloning lucene and install locally into maven
+
+     ./gradlew clean assemble publishToMavenLocal
+   */
+  implementation 'org.apache.lucene:lucene-core:10.0.0-SNAPSHOT'
 }
