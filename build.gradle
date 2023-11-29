@@ -7,6 +7,18 @@ repositories {
   maven { url "https://plugins.gradle.org/m2/" }
 }
 
+/*
+  If you want to use the latest snapshot version you can generate it by using cloning lucene and install locally into maven
+  `./gradlew clean assemble publishToMavenLocal`
+ */
+
+/*
+  To build with a different version of lucene you can use
+  ./gradlew clean build -Dlucene.version=9.8.0
+ */
+def version = System.getProperty("lucene.version", "10.0.0-SNAPSHOT")
+
 dependencies {
-  implementation 'org.apache.lucene:lucene-core:9.8.0'
+  implementation "org.apache.lucene:lucene-core:${version}"
+  implementation "org.apache.lucene:lucene-queries:${version}"
 }
