@@ -5,6 +5,7 @@ repositories {
   maven { url "https://aws.oss.sonatype.org/content/repositories/snapshots" }
   mavenCentral()
   maven { url "https://plugins.gradle.org/m2/" }
+  maven { url "https://archiva-repository.apache.org/archiva/repository/snapshots/" }
 }
 
 /*
