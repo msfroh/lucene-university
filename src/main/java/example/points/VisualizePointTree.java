@@ -38,7 +38,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 
-public class VisualizePointTreeTree {
+public class VisualizePointTree {
 
 
     // ## Helper function to print the `PointTree`
