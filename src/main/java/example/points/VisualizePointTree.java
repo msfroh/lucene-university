@@ -1,4 +1,4 @@
-// # Single-valued points
+// # Visualizing a point tree
 //
 // In this example, we will look at how Lucene indexes numeric fields using "points". These points are stored
 // in a structure called a binary K-d tree (see https://en.wikipedia.org/wiki/K-d_tree for more details). The  K-d tree
@@ -88,9 +88,9 @@ public class VisualizePointTree {
             // *Optional exercise:* Try modifying these to output the same `val` value for every document.
             for (int i = 0; i < 10_000; i++) {
                 writer.addDocument(List.of(new KeywordField("id", "first " + i, Field.Store.NO),
-                        new IntField("val", 1, Field.Store.NO)));
+                        new IntField("val", i, Field.Store.NO)));
                 writer.addDocument(List.of(new KeywordField("id", "second " + i, Field.Store.NO),
-                        new IntField("val", 1, Field.Store.NO)));
+                        new IntField("val", i, Field.Store.NO)));
                 //
                 // *Optional exercise:* Uncomment this flush block if you want to write the documents to 5 segments:
                 //
