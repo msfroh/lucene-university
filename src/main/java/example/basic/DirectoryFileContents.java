@@ -112,7 +112,7 @@ public class DirectoryFileContents {
 // Note that the SimpleTextCodec is an implementation that is conceptually similar to the real binary codecs, but
 // certainly // not identical. There are compromises that SimpleTextCodec has made to implement a fully-functioning
 // codec in plain text.
-//
+
 // ### Doc values
 //
 // The `.dat` file stores the doc values for the `val` field.
@@ -453,7 +453,7 @@ checksum 00000000001512782415
 // outputs the raw bytes for the segment's unique ID, so it is not a valid UTF-8 encoding.
 // See https://github.com/apache/lucene/pull/12897.
 File _0.si has size 739
-//
+
 // ### Commit file
 //
 // Each commit increments the commit generation and writes a `segments_<generation>` file. When indexing from a single
