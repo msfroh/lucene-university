@@ -29,9 +29,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+// ## Example code
 public class DirectoryFileContents {
 
-    // ## Creating Documents
+    // ### Creating Documents
     //
     // We will mostly reuse the same documents from SimpleSearch, but we'll also add a numeric `IntField` which will
     // write both points and doc values. Points are covered in more detail by examples in the "points" package.
@@ -58,7 +59,7 @@ public class DirectoryFileContents {
         return docs;
     }
 
-    // ## Create the Lucene index with SimpleTextCodec
+    // ### Create the Lucene index with SimpleTextCodec
     //
     public static void main(String[] args) throws IOException {
         Path tmpDir = Files.createTempDirectory(DirectoryFileContents.class.getSimpleName());
@@ -73,7 +74,8 @@ public class DirectoryFileContents {
         //
         IndexWriterConfig conf = new IndexWriterConfig();
         conf.setCodec(new SimpleTextCodec());
-        // By default,
+        // By default, Lucene writes small segments as a single "compound" file. To make the output easier to read,
+        // we disable that with `setUseCompoundFile(false)`.
         conf.setUseCompoundFile(false);
         try (Directory directory = FSDirectory.open(tmpDir);
              IndexWriter writer = new IndexWriter(directory, conf)) {
@@ -81,7 +83,7 @@ public class DirectoryFileContents {
                 writer.addDocument(doc);
             }
         } finally {
-            // ## Dump the index contents
+            // ### Dump the index contents
             //
             // Once we've closed the IndexWriter, before we delete each file, we print each file name and its size.
             //
@@ -464,7 +466,6 @@ File _0.si has size 739
 // The commit file holds the "SegmentInfos" (plural). It is not managed by the codec, since it encodes the information
 // about what segments are part of the given commit and which codecs were used to write each segment. Since the
 // file was not written by SimpleTextCodec, it is a binary file, so we don't output it here.
-///
 File segments_1 has size 156
 
 // ### Write lock
