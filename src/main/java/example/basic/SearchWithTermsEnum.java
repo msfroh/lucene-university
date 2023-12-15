@@ -66,7 +66,7 @@ public class SearchWithTermsEnum {
         // As in the previous example, we will create a temporary directory, open it as a Lucene `Directory`, and
         // create an `IndexWriter`. Then we'll add each of the example documents.
         //
-        Path tmpDir = Files.createTempDirectory(SimpleSearch.class.getSimpleName());
+        Path tmpDir = Files.createTempDirectory(SearchWithTermsEnum.class.getSimpleName());
         try (Directory directory = FSDirectory.open(tmpDir);
              IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig())) {
             for (List<IndexableField> doc : createDocuments()) {
