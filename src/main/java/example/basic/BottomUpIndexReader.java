@@ -52,7 +52,7 @@ import java.util.List;
 public class BottomUpIndexReader {
     // ## Index setup
     //
-    // We'll create a similar index to DirectoryFileContext, but we'll stick with the default codec, since we're
+    // We'll create a similar index to DirectoryFileContents, but we'll stick with the default codec, since we're
     // going to explore how the codec is used to decode the index files (since codec is short for "coder and decoder").
     //
     private static Path createLuceneIndex() throws IOException {
