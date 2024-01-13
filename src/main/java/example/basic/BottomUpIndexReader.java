@@ -289,8 +289,25 @@ public class BottomUpIndexReader {
                         lineLength = 0;
                     }
                 }
-                System.out.println(builder.toString());
+                System.out.println(builder);
             }
+            // ### Memory-mapped files
+            //
+            // In the above example, we initialized a `FieldsProducer`, which first opened an `IndexInput` "slice" of the
+            // `_0.cfs` `IndexInput` corresponding to the `_0_Lucene99_0.doc` file (for the postings -- the doc ids for
+            // each term). Then it opened another `IndexInput` slice in the CFS file for `_0_Lucene99_0.tim` (the terms),
+            // as well as slices for `_0_Lucene99_0.tip` (the terms index), and `_0_Lucene99_0.tmd` (the term metadata).
+            //
+            // For each indexed field in the index (in this case, just the `text` field), the postings reader
+            // (technically the Lucene90BlockTreeTermsReader) allocated a `FieldReader`. Each `FieldReader` holds some
+            // field metadata (e.g. first/last term, sum of doc frequencies and term frequencies across all terms for
+            // the field), but otherwise it's a lazy data structure that reads from the files opened above when asked
+            // (but not the`.tmd` file -- we're done with that) when asked. It's also the `Terms` variable that we
+            // retrieved above.
+            //
+            // Similarly, each time we call `termsEnum.next()`, we're just advancing a pointer into a memory-mapped
+            // file. The file is probably fully paged into memory (since the whole `_0.cfs` file is only 2337
+            // bytes), so it's really not much worse than reading values out of objects in the JVM heap.
         } finally {
             for (String indexFile : FSDirectory.listAll(indexDir)) {
                 Files.deleteIfExists(indexDir.resolve(indexFile));
