@@ -21,6 +21,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.LeafReader;
 import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.StoredFields;
@@ -94,7 +95,8 @@ public class SearchWithTermsEnum {
                     // If we have multiple segments (if we uncommented the `writer.flush()` line above), we see that
                     // each segment has its own term dictionary.
                     //
-                    Terms textTerms = Terms.getTerms(leafReaderContext.reader(), "text");
+                    LeafReader leafReader = leafReaderContext.reader();
+                    Terms textTerms = Terms.getTerms(leafReader, "text");
                     System.out.println("Segment " + leafReaderContext.ord + " has " + textTerms.size() + " terms");
 
                     // We can iterate through all the terms using a `TermsEnum`:
@@ -135,7 +137,7 @@ public class SearchWithTermsEnum {
                             System.out.println("Matching doc with id " + docId + ":");
                             // As with the SimpleSearch example, we can load the stored fields to retrieve the full
                             // `text` field value. In this case, though, we're loading the segment-local `StoredFields`.
-                            StoredFields storedFields = leafReaderContext.reader().storedFields();
+                            StoredFields storedFields = leafReader.storedFields();
                             System.out.println(storedFields.document(docId).get("text"));
                         }
                     } else {
