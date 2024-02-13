@@ -74,7 +74,7 @@ public class VisualizePointTree {
     //
     public static void main(String[] args) throws IOException {
         // Create a temporary directory to hold the index, then create the Lucene Directory and IndexWriter.
-        Path tmpDir = Files.createTempDirectory(SimpleSearch.class.getSimpleName());
+        Path tmpDir = Files.createTempDirectory(VisualizePointTree.class.getSimpleName());
         try (Directory directory = FSDirectory.open(tmpDir);
              IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig())) {
 
