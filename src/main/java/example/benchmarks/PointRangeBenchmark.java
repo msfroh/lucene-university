@@ -8,6 +8,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TopScoreDocCollectorManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -71,8 +72,9 @@ public class PointRangeBenchmark {
                 }
 
                 for (int i = 0; i < queries.length; i++) {
+                    TopScoreDocCollectorManager manager = new TopScoreDocCollectorManager(10, Integer.MAX_VALUE);
                     long start = System.nanoTime();
-                    searcher.search(queries[i], 10);
+                    searcher.search(queries[i], manager);
                     long time = System.nanoTime() - start;
                     int bucket = 63 - Long.numberOfLeadingZeros(time);
                     timeBuckets[bucket]++;
