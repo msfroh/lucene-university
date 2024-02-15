@@ -82,7 +82,8 @@ public class PointRangeBenchmark {
                     min = Math.min(min, time);
                     max = Math.max(max, time);
                     if (i > 0 && i % 5_000 == 0) {
-                        System.gc();
+//                        System.gc();
+                        System.out.println("Average so far: " + sum / i);
                     }
                 }
             }
