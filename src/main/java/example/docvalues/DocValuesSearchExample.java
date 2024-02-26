@@ -1,3 +1,11 @@
+// # Doc values example
+//
+// This example will cover the basics of the Apache Lucene doc values, including storing, querying and retrieving
+// them (for the search hits).
+//
+// 1. https://www.elastic.co/guide/en/elasticsearch/reference/7.10/doc-values.html#doc-values
+// 2. https://www.elastic.co/blog/sparse-versus-dense-document-values-with-apache-lucene
+//
 package example.docvalues;
 
 import example.basic.SimpleSearch;
@@ -27,13 +35,10 @@ public class DocValuesSearchExample {
     // - binary data blobs
     // 
     // Doc values are the on-disk data structure, built at document index time. They store the same values as the 
-    // _source but in a column-oriented fashion that is way more  efficient for sorting and aggregations and 
-    // are quite fast to access at search time (only the  value for field in question needs to be decoded per hit).
+    // document source but in a column-oriented fashion that is way more  efficient for sorting, custom scoring (FunctionScoreQuery)
+    // and aggregations and are quite fast to access at search time (only the  value for field in question needs to be decoded per hit).
     // This is in contrast to Lucene's stored document fields,  which store all field values for one document together 
     // in a row-stride fashion, and are therefore relatively slow to access.
-    // 
-    // [1] https://www.elastic.co/guide/en/elasticsearch/reference/7.10/doc-values.html#doc-values
-    // [2] https://www.elastic.co/blog/sparse-versus-dense-document-values-with-apache-lucene
     //
     // ## Creating Documents
     //
@@ -45,6 +50,12 @@ public class DocValuesSearchExample {
     private static List<List<IndexableField>> createDocuments() {
         List<List<IndexableField>> docs = new ArrayList<>();
         for (int i = 0; i < 30; ++i) {
+            // ## Indexed vs Stored vs DocValues Fields
+            // 
+            //  - Indexed fields are organized by field -> term -> matching doc IDs -> positions.
+            //  - Stored fields are organized by document -> fields -> values (row wide).
+            //  - Doc values are organized by field -> specific doc -> values (sorted, column wide).
+            //
             List<IndexableField> doc = new ArrayList<>();
             doc.add(new StringField("id", Integer.toString(i), Field.Store.YES));
             doc.add(new IntPoint("order", i));
@@ -55,6 +66,8 @@ public class DocValuesSearchExample {
         return docs;
     }
 
+    // ## Example code
+    //
     public static void main(String[] args) throws IOException {
         // We start by creating a temporary directory, wherever your JVM specifies its default `java.io.tmpdir`.
         // This will hold the index files.
@@ -81,7 +94,7 @@ public class DocValuesSearchExample {
                 // An `IndexReader` is able to read the underlying structure of the index, but high-level searching
                 // requires an `IndexSearcher`. We'll explore the low-level `IndexReader` operations in a later lesson.
                 IndexSearcher searcher = new IndexSearcher(reader);
-                // A field that both indexed {@link IntPoint}s and {@link SortedNumericDocValuesField}s with the same values
+                // A field that both indexed as `IntPoint` and as `SortedNumericDocValuesField` with the same value.
                 final Query pointQuery = IntPoint.newRangeQuery("order", 5, 18);
                 final Query dvQuery = SortedNumericDocValuesField.newSlowRangeQuery("order", 5, 18);
                 // A `IndexOrDocValuesQuery` is a query that uses either an index structure (points or terms) or doc values 
@@ -100,8 +113,8 @@ public class DocValuesSearchExample {
                     // class has a number of utility methods to access doc values. The `MultiDocValues` simplifies access to doc values
                     // a bit by using `IndexReader` directly, not individual  `LeafReader`s.
                     final SortedNumericDocValues sortedNumericDocValues = MultiDocValues.getSortedNumericValues(reader, "order");
-                    // Extract the doc values for a specific document by advancing the iterator. The `LeafReader` may no contain this
-                    // specific document so we would need to check another  `LeafReader` instead.
+                    // Extract the doc values for a field within specific document by advancing the iterator to the exact 
+                    // document position.
                     if (sortedNumericDocValues.advanceExact(scoreDoc.doc)) {
                         System.out.print("Doc values for doc [" + scoreDoc.doc + "]: ");
                         for (int count = 0; count < sortedNumericDocValues.docValueCount(); ++count) {
