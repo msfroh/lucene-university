@@ -193,7 +193,7 @@ public class BottomUpIndexReader {
             // _0.fdx
             // _0.fdt
             // ```
-            CompoundDirectory seg0dir = codec.compoundFormat().getCompoundReader(dir, seg0info, IOContext.READ);
+            CompoundDirectory seg0dir = codec.compoundFormat().getCompoundReader(dir, seg0info, IOContext.DEFAULT);
             System.out.println("Compound file segment _0.cfs has the following contents:");
             for (String innerFile : seg0dir.listAll()) {
                 System.out.println(" " + innerFile);
@@ -271,8 +271,8 @@ public class BottomUpIndexReader {
             // amet brown dog dolor fox ipsum jumped lazy left loom lorem made oblivious over paces past quick room
             // she sit sly sneaks the three through web
             // ```
-            FieldInfos fieldInfos = codec.fieldInfosFormat().read(seg0dir, seg0info, "", IOContext.READ);
-            SegmentReadState segmentReadState = new SegmentReadState(seg0dir, seg0info, fieldInfos, IOContext.READ);
+            FieldInfos fieldInfos = codec.fieldInfosFormat().read(seg0dir, seg0info, "", IOContext.DEFAULT);
+            SegmentReadState segmentReadState = new SegmentReadState(seg0dir, seg0info, fieldInfos, IOContext.DEFAULT);
             try (FieldsProducer fieldsProducer = codec.postingsFormat().fieldsProducer(segmentReadState)) {
                 Terms terms = fieldsProducer.terms("text");
                 TermsEnum termsEnum = terms.iterator();
