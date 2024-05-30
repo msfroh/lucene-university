@@ -183,7 +183,7 @@ public class BooleanQueryANDInternals {
         @Override
         public ScorerSupplier scorerSupplier(LeafReaderContext context) throws IOException {
             ScorerSupplier leftScorerSupplier = leftWeight.scorerSupplier(context);
-            ScorerSupplier rightScorerSupplier = leftWeight.scorerSupplier(context);
+            ScorerSupplier rightScorerSupplier = rightWeight.scorerSupplier(context);
             Weight weight = this;
             return new ScorerSupplier() {
                 @Override
