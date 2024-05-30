@@ -45,6 +45,7 @@ import org.apache.lucene.search.QueryVisitor;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.ScoreMode;
 import org.apache.lucene.search.Scorer;
+import org.apache.lucene.search.ScorerSupplier;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.Weight;
@@ -180,8 +181,22 @@ public class BooleanQueryANDInternals {
         // We return our custom `Scorer` implementation for a given index segment, after creating the scorers for
         // each of our operands.
         @Override
-        public Scorer scorer(LeafReaderContext context) throws IOException {
-            return new BinaryAndScorer(this, leftWeight.scorer(context), rightWeight.scorer(context));
+        public ScorerSupplier scorerSupplier(LeafReaderContext context) throws IOException {
+            ScorerSupplier leftScorerSupplier = leftWeight.scorerSupplier(context);
+            ScorerSupplier rightScorerSupplier = leftWeight.scorerSupplier(context);
+            Weight weight = this;
+            return new ScorerSupplier() {
+                @Override
+                public Scorer get(long l) throws IOException {
+                    return new BinaryAndScorer(weight, leftScorerSupplier.get(l), rightScorerSupplier.get(l));
+                }
+
+                @Override
+                public long cost() {
+                    // Worst case, we match everything from left and right.
+                    return leftScorerSupplier.cost() + rightScorerSupplier.cost();
+                }
+            };
         }
 
         // The `IndexSearcher` holds a `QueryCache` instance that may store the matching doc IDs for a given query.
