@@ -218,7 +218,6 @@ public class BooleanQueryANDInternals {
         private final DocIdSetIterator docIdSetIterator;
 
         public BinaryAndScorer(Weight weight, Scorer leftScorer, Scorer rightScorer) {
-            super(weight);
             this.leftScorer = leftScorer;
             this.rightScorer = rightScorer;
             this.docIdSetIterator = new BinaryAndDocIdSetIterator(leftScorer.iterator(), rightScorer.iterator());
