@@ -24,3 +24,15 @@ dependencies {
   implementation "org.apache.lucene:lucene-queries:${version}"
   implementation "org.apache.lucene:lucene-codecs:${version}"
 }
+
+compileJava {
+  options.compilerArgs << "--enable-preview"
+  options.compilerArgs << "--add-modules" << "jdk.incubator.vector"
+}
+
+tasks.withType(JavaExec) {
+  jvmArgs += "--enable-preview"
+  jvmArgs += "--add-modules"
+  jvmArgs += "jdk.incubator.vector"
+}
+
