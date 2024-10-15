@@ -59,7 +59,7 @@ public class PointTreeRangeQuery {
             try (IndexReader reader = DirectoryReader.open(writer)) {
                 IndexSearcher searcher = new IndexSearcher(reader);
                 Query pointRangeQuery = IntPoint.newRangeQuery("val", 2000, 3999);
-                int count = searcher.search(pointRangeQuery, new TotalHitCountCollectorManager());
+                int count = searcher.search(pointRangeQuery, new TotalHitCountCollectorManager(searcher.getSlices()));
                 System.out.println("Query " + pointRangeQuery + " matched " + count + " documents");
 
                 // Let's do that again, but without the range query or index searcher. Instead, we will pass an

@@ -23,4 +23,5 @@ dependencies {
   implementation "org.apache.lucene:lucene-core:${version}"
   implementation "org.apache.lucene:lucene-queries:${version}"
   implementation "org.apache.lucene:lucene-codecs:${version}"
+  implementation "org.apache.lucene:lucene-sandbox:${version}"
 }
