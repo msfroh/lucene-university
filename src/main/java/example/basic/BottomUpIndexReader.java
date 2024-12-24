@@ -193,7 +193,7 @@ public class BottomUpIndexReader {
             // _0.fdx
             // _0.fdt
             // ```
-            CompoundDirectory seg0dir = codec.compoundFormat().getCompoundReader(dir, seg0info, IOContext.DEFAULT);
+            CompoundDirectory seg0dir = codec.compoundFormat().getCompoundReader(dir, seg0info);
             System.out.println("Compound file segment _0.cfs has the following contents:");
             for (String innerFile : seg0dir.listAll()) {
                 System.out.println(" " + innerFile);

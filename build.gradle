@@ -5,7 +5,7 @@ repositories {
   maven { url "https://aws.oss.sonatype.org/content/repositories/snapshots" }
   mavenCentral()
   maven { url "https://plugins.gradle.org/m2/" }
-  maven { url "https://archiva-repository.apache.org/archiva/repository/snapshots/" }
+  maven { url "https://repository.apache.org/content/groups/public/" }
 }
 
 /*
@@ -17,7 +17,7 @@ repositories {
   To build with a different version of lucene you can use
   ./gradlew clean build -Dlucene.version=9.8.0
  */
-def version = System.getProperty("lucene.version", "10.0.0-SNAPSHOT")
+def version = System.getProperty("lucene.version", "10.1.0")
 
 dependencies {
   implementation "org.apache.lucene:lucene-core:${version}"
