@@ -19,7 +19,7 @@ public class BKDTreeInspector {
 
     public static void main(String[] args) throws Exception {
         // Adjust the path below to point to your index directory.
-        Path indexPath = Paths.get("OS_30_1_968eafbd37ef0b864e887643c74291cc3e5ca0d0/nodes/0/indices/rOA5QvdyQ-2JYf3h0WZmFw/0/index/");
+        Path indexPath = Paths.get("/home/ec2-user/OS_30/OS_30_1_968eafbd37ef0b864e887643c74291cc3e5ca0d0/nodes/0/indices/rOA5QvdyQ-2JYf3h0WZmFw/0/index/");
         try (FSDirectory directory = FSDirectory.open(indexPath);
              IndexReader reader = DirectoryReader.open(directory)) {
 

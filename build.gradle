@@ -29,5 +29,5 @@ dependencies {
 
 application {
   // Replace with your actual package and class name
-  mainClass = 'com.example.BKDTreeInspector'
+  mainClass = 'example.point.BKDTreeInspector'
 }
