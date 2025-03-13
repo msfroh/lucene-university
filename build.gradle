@@ -25,3 +25,8 @@ dependencies {
   implementation "org.apache.lucene:lucene-codecs:${version}"
   implementation "org.apache.lucene:lucene-sandbox:${version}"
 }
+
+application {
+  // Replace with your actual package and class name
+  mainClass = 'com.example.BKDTreeInspector'
+}
