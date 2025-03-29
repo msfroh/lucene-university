@@ -14,7 +14,7 @@ other examples.) This should feel kind of like reading a book.
 
 ## Getting started
 
-This repository currently depends on a snapshot of Lucene 10, which requires JDK 17 or higher.
+This repository currently depends on Lucene 10, which requires JDK 21 or higher.
 
 You can clone the repository and build the examples with:
 
@@ -27,7 +27,7 @@ cd lucene-university
 Using IntelliJ, you can use "File -> New -> Project from Existing Sources..." and point it to the location where the
 code was cloned. Select "Import Project from Existing Model" and choose "Gradle" (assuming you have the Gradle plugin
 installed). If you run into errors regarding class file versions, you may need to go to "File -> Project Structure..." 
-to make sure that you have selected the correct JDK (17 or higher) and set an appropriate language level.
+to make sure that you have selected the correct JDK (21 or higher) and set an appropriate language level.
 
 ## Contributing
 
