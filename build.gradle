@@ -22,12 +22,13 @@ def version = System.getProperty("lucene.version", "10.1.0")
 
 dependencies {
   implementation "org.apache.lucene:lucene-core:${version}"
+  implementation "org.apache.lucene:lucene-backward-codecs:${version}"
   implementation "org.apache.lucene:lucene-queries:${version}"
   implementation "org.apache.lucene:lucene-codecs:${version}"
   implementation "org.apache.lucene:lucene-sandbox:${version}"
 }
 
-application {
+/*application {
   // Replace with your actual package and class name
-  mainClass = 'example.point.BKDTreeInspector'
-}
+  mainClass = 'example.points.BKDTreeInspector'
+}*/
