@@ -1,4 +1,4 @@
-package example.basic;
+package example.tools;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;

@@ -1,4 +1,4 @@
-package example.points;
+package example.tools;
 
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.index.*;
