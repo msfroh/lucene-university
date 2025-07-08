@@ -1,18 +1,32 @@
 // # Finite State Transducers
 //
+// The Java source for this lesson is available at
+// http://github.com/msfroh/lucene-university/tree/main/src/main/java/example/foundations/FiniteStateTransducers.java.
+//
 // Lucene's term dictionary is implemented using "finite state transducers" (FSTs). This is a compact way of representing
 // the dictionary of terms in the index. A finite state transducer is like a finite state automaton, but it can also
 // point to some output. If a finite state automaton is like a "set" that identifies whether a given input is included
 // in the dictionary, a finite state transducer is like a "map" that points to the postings for a given term in the
 // dictionary.
 //
+// For details on how Lucene uses FSTs, check out Mike McCandless's blog post at
+// https://blog.mikemccandless.com/2010/12/using-finite-state-transducers-in.html.
+//
+// Another **great** resource is the blog post on transducers by Andrew Gallant at https://burntsushi.net/transducers/.
+// In particular, that blog post references the same papers that I dig into in this lesson, and has a pretty similar
+// overall structure. Andrew Gallant wrote the standard `fst` library for Rust, which was
+// [tweaked](https://github.com/quickwit-inc/fst) for the FST implementation in
+// [Tantivy](https://github.com/quickwit-oss/tantivy) and is used for the full-text search indexes in
+// [LanceDB](https://github.com/lancedb/lancedb). (Thank you to Prateek Rungta for reminding me about that blog post!)
+//
 // The FST implementation in Lucene is inspired by the paper "Direct Construction of Minimal Acyclic Subsequential
 // Transducers" by Mihov and Maurel (available from Mihov's website at https://lml.bas.bg/~stoyan/lmd/Publications.html).
 //
 // That paper builds on the earlier paper, "Incremental Construction of Minimal Acyclic Finite-State
 // Automata" by Daciuk, Mihov, Watson, and Watson (https://aclanthology.org/J00-1002.pdf). This lesson will follow
-// the approach from that paper, including starting with a trie data structure and then moving on to the algorithm they
-// use to construct a minimal automaton.
+// the approach from this earlier paper, including starting with a trie data structure and then moving on to the
+// algorithm they use to construct a minimal automaton. From there, we'll generalize from finite state automata to
+// finite state transducers, following the approach from the Mihov and Maurel paper.
 package example.foundations;
 
 import java.util.ArrayList;
@@ -180,9 +194,6 @@ public class FiniteStateTransducers {
     }
 
     // We can test out the trie implementation by inserting some keys and values, then searching for them.
-    //
-    // The rendered trie will look like this:
-    // ![](resources/trie.png)
     private static void trieMain() {
         // Insert months of the year into the trie, with the number of days in each month as the value.
         Trie<Integer> trie = new Trie<>();
@@ -212,6 +223,9 @@ public class FiniteStateTransducers {
         // ```
         System.out.println(trie.toDot());
     }
+    //
+    // The rendered trie will look like this:
+    // ![](resources/trie.svg)
 
     // ## Constructing a minimal acyclic finite-state automaton (FSA)
     //
@@ -224,9 +238,9 @@ public class FiniteStateTransducers {
     //
     // Before diving into the algorithm, let's look at the graph for the months of the year and compare to the output
     // of the trie above. Note that we are able to reuse the common suffixes of the months, such as "ember" in
-    // "September", "November", and "December".
+    // "September", "November", and "December". The shape of the graph is more compact than the trie.
     //
-    // ![](resources/daciukMihovFSA.png)
+    // ![](resources/daciukMihovFSA.svg)
 
     private static class DaciukMihovFiniteAutomaton extends DirectedAcyclicGraph<Boolean> {
         private String previousWord = null;
@@ -403,8 +417,8 @@ public class FiniteStateTransducers {
     //
     // From my reading of the paper, it follows somewhat similar approach to the FSA algorithm to guarantee that
     // at each step, the transducer is minimal except for the word that we added last. As we add each new word, we
-    // minimize the path to the previous word. This minimization may involve moving the output labels to earlier
-    // states in the path.
+    // minimize the path to the previous word. This minimization may involve moving the output labels to later
+    // states and edges in the path to resolve output conflicts produced by the new entry.
     //
     // The paper has a somewhat more programmer-friendly algorithm than the FSA paper, which takes a more mathematical
     // approach. The algorithm is presented in a Pascal-like pseudocode, which I will translate into Java, while trying
@@ -827,7 +841,7 @@ public class FiniteStateTransducers {
     // with the number of days.
     //
     // The resulting FST looks like:
-    // ![](resources/mihovMaurelFST.png)
+    // ![](resources/mihovMaurelFST.svg)
     //
     // To understand the output, you collect the outputs from the arcs that you traverse and concatenate them.
     private static void mihovMaurelFSTMain() {
@@ -929,7 +943,7 @@ public class FiniteStateTransducers {
     // We can test out this implementation as well. Note that to read the output, you need to sum up the values from
     // edges as you traverse the automaton.
     //
-    // ![](resources/mihovMaurelIntegerFST.png)
+    // ![](resources/mihovMaurelIntegerFST.svg)
     private static void mihovMaurelIntegerFSTMain() {
         // Insert months of the year into the transducer, with number of days in each month.
         List<Pair<String, IntegerConcatenable>> pairs = new ArrayList<>();
@@ -963,7 +977,15 @@ public class FiniteStateTransducers {
     }
 
     // ## Wrapping it all up
-
+    //
+    // Hopefully that helps demystify the way that Lucene uses finite-state transducers to map from terms to their
+    // postings lists (via their ordinals). The FST implementation is a powerful tool that can be used to
+    // efficiently store and retrieve mappings between keys and values, especially when the keys share common prefixes
+    // and suffixes, which is often the case with human-language text.
+    //
+    // If you want to experiment with the examples above, here is the `main` method. Unlike most other examples in
+    // the repository, I added an argument to let you choose which specific implementation to run. This also reflects
+    // the way I wrote it, since I started with the trie and moved down through the other implementations.
     public static void main(String[] args) {
         if (args.length != 1) {
             System.err.println("Usage: java FiniteStateTransducers <command>");
