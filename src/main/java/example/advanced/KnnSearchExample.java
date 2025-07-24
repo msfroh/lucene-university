@@ -19,12 +19,12 @@ public class KnnSearchExample {
 
     // ## Creating Documents
     //
-    // We will create a list of documents, where each document has a single field, `text`.
+    // We will create a list of documents, where each document where each document has two fields, an 'id' field of type string
+    // and a 'knnFloatField' of type KnnFloatVectorField.
     //
-    // We use the `TextField` type to indicate that it's a "full text" field, to be split into individual tokens
-    // during indexing.
+    // The 'knnFloatField' is essentially a float array representing a vector
     //
-    // In order to retrieve the original field value in our search results, we indicate that we want the field value
+    // In order to retrieve the original field value in our search results, we indicate that we want the 'id' field value
     // stored using `Field.Store.YES`.
     private static List<List<IndexableField>> createDocuments() {
         List<float[]> vectors = List.of(
@@ -74,8 +74,8 @@ public class KnnSearchExample {
                 // An `IndexReader` is able to read the underlying structure of the index, but high-level searching
                 // requires an `IndexSearcher`. We'll explore the low-level `IndexReader` operations in a later lesson.
                 IndexSearcher searcher = new IndexSearcher(reader);
-                // A `KnnFloatVectorQuery` is the most basic KNN query supported by Lucene. It is able to search for a single
-                // vector in a field and retrieve the first K closest neighbours. In this case, we're going to search for the
+                // A `KnnFloatVectorQuery` is the most basic KNN query supported by Lucene. Given a query vector, it is able to
+                // retrieve the K closest neighbours. In this case, we're going to search for the
                 // vector [1, 2, 3] in the `knnFloatField` field and search for the 3 (k = 3) nearest neighbours.
                 // Meaning we are going to search for the 3 "closest" vectors.
                 // The calculation of similarity between vectors in the `knnFloatField` will be based on Euclidean distance
@@ -89,14 +89,14 @@ public class KnnSearchExample {
                 // we would expect to get 4 results sorted from the closest to the furthest.
                 // However, we already defined the `knnFloatVectorQuery` to only return k = 3, meaning that we will only
                 // remain with 3 results sorted from nearest to furthest.
-                // In our case we will expect the vector [1, 2, 3] that to be the "closest" result because
+                // In our case we will expect the vector [1, 2, 3] to be the "closest" result because
                 // it's exactly similar to the vector we are searching for and therefore the Euclidean distance between them is 0
                 // and the score would be score = 1 / (1 + 0)
                 TopDocs topDocs = searcher.search(knnFloatVectorQuery, 10);
                 // If our query had matched more than 10 documents, then `topDocs` would contain the top 10 documents,
                 // while `topDocs.totalHits` would have the total number of matching documents (or a lower bound on the
                 // total number of matching documents, if more than 1000 documents match).
-                System.out.println("Query " + knnFloatVectorQuery + " matched " + topDocs.totalHits + " documents:");
+                System.out.println("Query " + knnFloatVectorQuery + " got " + topDocs.totalHits + ":");
                 // The `topDocs` contains a list of `ScoreDoc`, which just have scores and Lucene-generated doc IDs.
                 // Since these doc IDs are likely meaningless to us as users, we ask the reader for a `StoredFields`
                 // instance able to retrieve stored field values based on the doc IDs.
